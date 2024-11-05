@@ -1,0 +1,43 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "preLaunchTask": "npm: start - frontend",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/frontend",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack:///./*": "${webRoot}/src/*"
+            }
+        },        
+        {
+            "type": "java",
+            "name": "Launch Spring Boot Application",
+            "request": "launch",
+            "mainClass": "",
+            "cwd": "${workspaceFolder}/backend",
+            "console": "integratedTerminal",
+            "preLaunchTask": "java (build): Build Workspace",
+            "args": [
+                "-jar",
+                "target/backend.jar" 
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": [
+                "Launch Chrome against localhost",
+                "Launch Spring Boot Application",
+            ],
+            "stopAll": true,
+        }
+    ]
+}

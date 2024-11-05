@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "frontend",
+			"label": "npm: start - frontend",
+			"detail": "react-scripts start",
+			"options": {
+				"env": {
+					"BROWSER": "none",
+					"PORT": "3000",
+				}
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": true,
+			},
+			"isBackground": true,
+			"problemMatcher":{
+				"owner": "custom",
+				"pattern": {
+					"regexp": "^$",
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "Compiling...",
+					"endsPattern":"Compiled .*",
+				}
+			},
+		},
+		{
+            "label": "Build with Maven",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["clean", "package"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+			"problemMatcher": {
+				"owner": "java",
+				"fileLocation": ["relative", "${workspaceFolder}/backend"],
+				"pattern":{
+                    "regexp": "^(.*\\.java):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/backend"
+			},
+            "detail": "Maven build task for Spring Boot project"
+        }
+	]
+}
