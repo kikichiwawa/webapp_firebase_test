@@ -19,7 +19,7 @@ public class TestController {
     @GetMapping("allImages")
     public ResponseEntity<getAllImageResponse> getAllImages(@RequestBody getAllImageRequest request){
         getAllImageResponse response = new getAllImageResponse();
-        Image[] images = new Image[0];
+        Image[] images = new Image[1];
         
         Image image = new Image();
         image.setFileName("1730361399646_PXL_20220410_021627323.jpg");
@@ -28,6 +28,7 @@ public class TestController {
         image.setText("test image");
         image.setTimestamp(new Date(System.currentTimeMillis()));
 
+        images[0] = image;
         response.setAllImage(images);
         return ResponseEntity.ok(response);
     }
