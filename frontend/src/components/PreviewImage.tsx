@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Image from "../types/image";
-import { formatTimestamp } from "../utils/formatTimestamp";
 import { getDownloadURL, ref, StorageReference } from "firebase/storage";
 import { storage } from "../lib/firebase";
 
@@ -41,7 +40,7 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
                 />
             </p>
             <p>{image.text}</p>
-            <p>{formatTimestamp(image.timestamp.toDate())}</p>
+            <p>{image.timestamp.toString()}</p>
         </div>
     );
 }
