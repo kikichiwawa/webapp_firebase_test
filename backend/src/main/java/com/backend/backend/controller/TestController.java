@@ -3,21 +3,21 @@ package com.backend.backend.controller;
 import java.sql.Date;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.entity.Image;
-import com.backend.backend.entity.getAllImageRequest;
 import com.backend.backend.entity.getAllImageResponse;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("")
 public class TestController {
 
     @GetMapping("allImages")
-    public ResponseEntity<getAllImageResponse> getAllImages(@RequestBody getAllImageRequest request){
+    public ResponseEntity<getAllImageResponse> getAllImages(){
         getAllImageResponse response = new getAllImageResponse();
         Image[] images = new Image[1];
         

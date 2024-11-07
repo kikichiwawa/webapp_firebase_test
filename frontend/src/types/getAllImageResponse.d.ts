@@ -1,5 +1,7 @@
+import Image from "./image";
+
 interface GetAllImageResponse{
-    allImages : Image[],
+    allImage : Image[],
 }
 
 export default GetAllImageResponse;
