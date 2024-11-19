@@ -2,6 +2,7 @@ package com.backend.backend.controller;
 
 import java.sql.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.entity.Image;
 import com.backend.backend.entity.getAllImageResponse;
+import com.backend.backend.service.FirestoreService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("")
-public class TestController {
+@RequestMapping("fb")
+public class FirebaseController {
+    
+    @Autowired
+    private FirestoreService firestoreServier;
 
     @GetMapping("allImages")
     public ResponseEntity<getAllImageResponse> getAllImages(){
