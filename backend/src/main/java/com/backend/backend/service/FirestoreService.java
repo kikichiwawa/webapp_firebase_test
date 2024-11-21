@@ -1,5 +1,7 @@
 package com.backend.backend.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -11,23 +13,37 @@ import org.springframework.stereotype.Service;
 import com.backend.backend.entity.Image;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 
 @Service
 public class FirestoreService {
+
     @Autowired
     private Firestore firestore;
+    
+    @Autowired
+    private ObjectMapper mapper;
 
     private Map<String, Object> convertImageToMap(Image image){
-        ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.convertValue(image, new TypeReference<Map<String, Object>>() {});
         return map;
     }
 
     private Image convertMapToImage(Map<String, Object> map){
-        ObjectMapper mapper = new ObjectMapper();
+        if(map.containsKey("timestamp")){
+            Object timestampObj = map.get("timestamp");
+            if(timestampObj instanceof Timestamp){
+                Timestamp firestoreTimestamp = (Timestamp) timestampObj;
+                LocalDateTime localDateTime = firestoreTimestamp.toDate()
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+                map.put("timestamp", localDateTime);
+            }
+        }
         Image image = mapper.convertValue(map, new TypeReference<Image>() {});
         return image;
     }
@@ -57,7 +73,13 @@ public class FirestoreService {
     public List<Image> getAllImages(String collectionName){
         try {
             QuerySnapshot snapshot = firestore.collection(collectionName).get().get();
-            return snapshot.getDocuments().stream().map(doc -> convertMapToImage(doc.getData())).collect(Collectors.toList());
+            return snapshot.getDocuments().stream().map(doc -> {
+                System.out.println("-----------------\n");
+                System.out.println(doc.getData());
+                System.out.println("-----------------\n");
+
+                return convertMapToImage(doc.getData());
+            }).collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();

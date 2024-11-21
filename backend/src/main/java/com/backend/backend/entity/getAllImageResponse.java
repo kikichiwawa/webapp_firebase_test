@@ -1,8 +1,10 @@
 package com.backend.backend.entity;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
-public class getAllImageResponse {
-    private Image[] allImage;
+public class GetAllImageResponse {
+    private List<Image> allImage;
 }

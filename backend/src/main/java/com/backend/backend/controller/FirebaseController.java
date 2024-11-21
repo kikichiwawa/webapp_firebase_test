@@ -1,39 +1,40 @@
 package com.backend.backend.controller;
 
-import java.sql.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.backend.entity.Image;
-import com.backend.backend.entity.getAllImageResponse;
+import com.backend.backend.config.FirestoreConstants;
+import com.backend.backend.entity.GetAllImageResponse;
+import com.backend.backend.entity.GetSingleImageResponse;
 import com.backend.backend.service.FirestoreService;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("fb")
+@RequestMapping("/fb")
 public class FirebaseController {
     
     @Autowired
-    private FirestoreService firestoreServier;
+    private FirestoreService firestoreService;
 
-    @GetMapping("allImages")
-    public ResponseEntity<getAllImageResponse> getAllImages(){
-        getAllImageResponse response = new getAllImageResponse();
-        Image[] images = new Image[1];
+    @GetMapping("/allImages")
+    public ResponseEntity<GetAllImageResponse> getAllImages(){
+        GetAllImageResponse response = new GetAllImageResponse();
+        response.setAllImage(firestoreService.getAllImages(FirestoreConstants.IMAGE_COLLECTION));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetSingleImageResponse> getSingleImage(@PathVariable String id) {
+        GetSingleImageResponse response = new GetSingleImageResponse();
+        response.setImage(firestoreService.getSingleImage(FirestoreConstants.IMAGE_COLLECTION, id));
         
-        Image image = new Image();
-        image.setFileName("1730361399646_PXL_20220410_021627323.jpg");
-        image.setGreyFileName("1730361399646_PXL_20220410_021627323.jpg");
-        image.setText("test image");
-        image.setTimestamp(new Date(System.currentTimeMillis()));
-
-        images[0] = image;
-        response.setAllImage(images);
         return ResponseEntity.ok(response);
     }
 }

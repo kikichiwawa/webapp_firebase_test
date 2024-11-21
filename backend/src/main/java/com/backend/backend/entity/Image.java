@@ -1,8 +1,6 @@
 package com.backend.backend.entity;
 
-import java.sql.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.sql.Timestamp;
 
 import lombok.Data;
 
@@ -10,7 +8,6 @@ import lombok.Data;
 public class Image{
     private String fileName;
     private String text;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date timestamp;
+    private Timestamp timestamp;
     private String greyFileName;
 }
