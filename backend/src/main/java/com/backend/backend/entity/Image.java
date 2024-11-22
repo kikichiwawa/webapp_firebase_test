@@ -1,6 +1,6 @@
 package com.backend.backend.entity;
 
-import java.sql.Timestamp;
+import com.google.cloud.Timestamp;
 
 import lombok.Data;
 

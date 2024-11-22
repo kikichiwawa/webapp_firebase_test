@@ -1,7 +1,5 @@
 package com.backend.backend.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.backend.backend.entity.Image;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -30,13 +27,13 @@ public class FirestoreService {
     private Map<String, Object> convertImageToMap(Image image){
         Map<String, Object> map = mapper.convertValue(image, new TypeReference<Map<String, Object>>() {});
         // timestampの変換
-        if(map.containsKey("timestamp")){
-            Object localDateTimeObj = map.get("timestamp"); 
-            if(localDateTimeObj instanceof LocalDateTime){
-                LocalDateTime imageTimestamp = (LocalDateTime) localDateTimeObj;
-                Timestamp timestamp = 
-            }
-        }
+        // if(map.containsKey("timestamp")){
+        //     Object localDateTimeObj = map.get("timestamp"); 
+        //     if(localDateTimeObj instanceof LocalDateTime){
+        //         LocalDateTime imageTimestamp = (LocalDateTime) localDateTimeObj;
+        //         Timestamp timestamp = 
+        //     }
+        // }
         
         // idの削除
         if(map.containsKey("id")){
@@ -47,17 +44,17 @@ public class FirestoreService {
 
     private Image convertMapToImage(Map<String, Object> map, String id){
         // timestampをLocalDateTimeに変換してから設定
-        if(map.containsKey("timestamp")){
-            Object timestampObj = map.get("timestamp");
-            if(timestampObj instanceof Timestamp){
-                Timestamp firestoreTimestamp = (Timestamp) timestampObj;
-                LocalDateTime localDateTime = firestoreTimestamp.toDate()
-                    .toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-                map.put("timestamp", localDateTime);
-            }
-        }
+        // if(map.containsKey("timestamp")){
+        //     Object timestampObj = map.get("timestamp");
+        //     if(timestampObj instanceof Timestamp){
+        //         Timestamp firestoreTimestamp = (Timestamp) timestampObj;
+        //         LocalDateTime localDateTime = firestoreTimestamp.toDate()
+        //             .toInstant()
+        //             .atZone(ZoneId.systemDefault())
+        //             .toLocalDateTime();
+        //         map.put("timestamp", localDateTime);
+        //     }
+        // }
         // idの設定
         map.put("id", id);
         Image image = mapper.convertValue(map, new TypeReference<Image>() {});
@@ -90,7 +87,7 @@ public class FirestoreService {
     public List<Image> getAllImages(String collectionName){
         try {
             QuerySnapshot snapshot = firestore.collection(collectionName).get().get();
-            return snapshot.getDocuments().stream().map(doc -> convertMapToImage(doc.getData()))
+            return snapshot.getDocuments().stream().map(doc -> convertMapToImage(doc.getData(), doc.getId()))
                 .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
