@@ -1,4 +1,5 @@
 interface Image{
+    id: string;
     fileName: string;
     text: number;
     timestamp: Data;
