@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class GetSingleImageResponse {
-    private Image image;
+    private FirebaseEntity<Image> imageEntity;
 }

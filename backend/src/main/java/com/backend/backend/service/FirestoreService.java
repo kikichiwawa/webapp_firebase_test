@@ -1,19 +1,19 @@
 package com.backend.backend.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.backend.entity.FirebaseEntity;
 import com.backend.backend.entity.Image;
+import com.backend.backend.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -29,68 +29,55 @@ public class FirestoreService {
 
     private Map<String, Object> convertImageToMap(Image image){
         Map<String, Object> map = mapper.convertValue(image, new TypeReference<Map<String, Object>>() {});
-        // timestampの変換
-        if(map.containsKey("timestamp")){
-            Object localDateTimeObj = map.get("timestamp"); 
-            if(localDateTimeObj instanceof LocalDateTime){
-                LocalDateTime imageTimestamp = (LocalDateTime) localDateTimeObj;
-                Timestamp timestamp = 
-            }
-        }
-        
-        // idの削除
-        if(map.containsKey("id")){
-            map.remove("id");
-        }
         return map;
     }
 
-    private Image convertMapToImage(Map<String, Object> map, String id){
-        // timestampをLocalDateTimeに変換してから設定
-        if(map.containsKey("timestamp")){
-            Object timestampObj = map.get("timestamp");
-            if(timestampObj instanceof Timestamp){
-                Timestamp firestoreTimestamp = (Timestamp) timestampObj;
-                LocalDateTime localDateTime = firestoreTimestamp.toDate()
-                    .toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-                map.put("timestamp", localDateTime);
-            }
-        }
+    private FirebaseEntity<Image> convertMapToImage(Map<String, Object> map, String id){
         // idの設定
-        map.put("id", id);
+        FirebaseEntity<Image> entity = new FirebaseEntity<Image>();
         Image image = mapper.convertValue(map, new TypeReference<Image>() {});
-        return image;
+        entity.setEntity(image);
+        entity.setId(id);
+        return entity;
     }
 
-    public String postImage(String collectionName, Image image){
+    public FirebaseEntity<Image> postImage(String collectionName, Image image)throws ExecutionException, InterruptedException{
         try {
-            DocumentReference docRef = firestore.collection(collectionName).document();
-            docRef.set(image).get();
-            return "Image updated successfully!";
+            // firestoreにImageをアップロードしid生成
+            DocumentReference docRef = firestore.collection(collectionName).add(image).get();
+            String newId = docRef.getId();
+
+            FirebaseEntity<Image> entity = new FirebaseEntity<Image>();
+            entity.setEntity(image);
+            entity.setId(newId);
+            return updateImage(collectionName, newId, image);
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Error creating document: "+e.getMessage();
+            throw e;
         }
     }
 
-    public Image getSingleImage(String collectionName, String documentId){
+    public FirebaseEntity<Image> getSingleImage(String collectionName, String documentId) throws ExecutionException, InterruptedException, ResourceNotFoundException{
         try {
             DocumentReference docRef = firestore.collection(collectionName).document(documentId);
+            if(!docRef.get().get().exists()){
+                throw new ResourceNotFoundException("Document with ID nonexistent-id does not exist in collection images");
+            }
+
             Map<String, Object> map = docRef.get().get().getData();
+            
+            System.out.println(map);
             String id = docRef.getId();
             return convertMapToImage(map, id);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
-    public List<Image> getAllImages(String collectionName){
+    public List<FirebaseEntity<Image>> getAllImages(String collectionName){
         try {
             QuerySnapshot snapshot = firestore.collection(collectionName).get().get();
-            return snapshot.getDocuments().stream().map(doc -> convertMapToImage(doc.getData()))
+            return snapshot.getDocuments().stream().map(doc -> convertMapToImage(doc.getData(), doc.getId()))
                 .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,15 +85,19 @@ public class FirestoreService {
         }
     }
 
-    public String updateImage(String collectionName, String documentId, Image image){
+    public FirebaseEntity<Image> updateImage(String collectionName, String documentId, Image image)throws ExecutionException, InterruptedException{
         try {
             DocumentReference docRef = firestore.collection(collectionName).document(documentId);
             Map<String, Object> map = convertImageToMap(image);
             docRef.update(map).get();
-            return "Image updated successfully!";
+
+            FirebaseEntity<Image> entity = new FirebaseEntity<Image>();
+            entity.setEntity(image);
+            entity.setId(documentId);
+            return entity;
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error updating document: " + e.getMessage();
+            throw e;
         }
     }
 
