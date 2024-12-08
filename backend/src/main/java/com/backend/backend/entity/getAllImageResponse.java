@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class GetAllImageResponse {
-    private List<Image> allImage;
+    private List<FirebaseEntity<Image>> allImageEntity;
 }
