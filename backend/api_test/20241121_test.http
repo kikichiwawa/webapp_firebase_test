@@ -1,6 +1,0 @@
-# 全てまとめての取得
-GET http://localhost:8080/fb/allImages
-
-
-# 単体での取得
-# GET http://localhost:8080/fb/0
