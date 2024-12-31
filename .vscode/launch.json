@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "ImageProcessingService",
+            "request": "launch",
+            "mainClass": "com.backend.backend.service.ImageProcessingService",
+            "projectName": "backend"
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "preLaunchTask": "npm: start - frontend",
