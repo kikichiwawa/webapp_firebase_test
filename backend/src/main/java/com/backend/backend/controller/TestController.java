@@ -1,35 +1,30 @@
 package com.backend.backend.controller;
 
-import java.sql.Date;
+import java.nio.file.Paths;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.backend.entity.Image;
-import com.backend.backend.entity.getAllImageResponse;
+import com.backend.backend.service.ImageProcessingService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("")
+@RequestMapping("/test")    
+
 public class TestController {
+    @Autowired
+    private ImageProcessingService imageProcessingService;
+    
+    @GetMapping("convert")
+    public void convert(){
+        String tempImagePath = "//temp_images";
+        String image = "/test.png";
 
-    @GetMapping("allImages")
-    public ResponseEntity<getAllImageResponse> getAllImages(){
-        getAllImageResponse response = new getAllImageResponse();
-        Image[] images = new Image[1];
-        
-        Image image = new Image();
-        image.setFileName("1730361399646_PXL_20220410_021627323.jpg");
-        image.setGreyFileName("1730361399646_PXL_20220410_021627323.jpg");
-        image.setId("test");
-        image.setText("test image");
-        image.setTimestamp(new Date(System.currentTimeMillis()));
-
-        images[0] = image;
-        response.setAllImage(images);
-        return ResponseEntity.ok(response);
+        String imagePath = Paths.get(tempImagePath, image).toString();
+        imageProcessingService.convertColorToGrey(imagePath);
     }
 }

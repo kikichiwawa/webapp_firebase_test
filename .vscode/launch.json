@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "ImageProcessingService",
+            "request": "launch",
+            "mainClass": "com.backend.backend.service.ImageProcessingService",
+            "projectName": "backend"
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "preLaunchTask": "npm: start - frontend",
@@ -15,7 +22,7 @@
             "sourceMapPathOverrides": {
                 "webpack:///./*": "${webRoot}/src/*"
             }
-        },        
+        },
         {
             "type": "java",
             "name": "Launch Spring Boot Application",
@@ -26,8 +33,18 @@
             "preLaunchTask": "java (build): Build Workspace",
             "args": [
                 "-jar",
-                "target/backend.jar" 
+                "target/backend.jar"
             ]
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BackendApplication<backend>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.backend.backend.BackendApplication",
+            "projectName": "backend",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ],
     "compounds": [
