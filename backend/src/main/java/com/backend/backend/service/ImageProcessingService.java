@@ -21,13 +21,13 @@ public class ImageProcessingService {
         // 最後のピリオド(.)位置を取得し，その前に"_edited"を挿入
         StringBuilder sb = new StringBuilder();
         sb.append(inputPath);
-        int index = inputPath.lastIndexOf(".")-1;
+        int index = inputPath.lastIndexOf(".");
         sb.insert(index, "_edited");
         return sb.toString();
     }
 
     public String convertColorToGrey(String inputPath){
-        new ij.ImageJ();
+        ij.ImageJ imageJ = new ij.ImageJ();
         String outputPath = createOutputPath(inputPath);
 
         try {
@@ -40,11 +40,12 @@ public class ImageProcessingService {
             processor = processor.convertToByte(true);
 
             ImagePlus editedImage = new ImagePlus("Edited Image", processor);
-            IJ.save(editedImage, outputPath);
+            IJ.save(editedImage, getAbsolutePath(outputPath));
         } catch (Exception e) {
             System.err.println("error: "+e.getMessage());
             e.printStackTrace();
         }
+        imageJ.quit();
         return outputPath;
     }
 }
