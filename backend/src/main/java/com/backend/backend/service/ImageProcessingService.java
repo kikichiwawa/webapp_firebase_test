@@ -26,9 +26,9 @@ public class ImageProcessingService {
         return sb.toString();
     }
 
-    public String convertColorToGrey(String inputPath){
+    public String convertColorToGrey(String inputPath, String outputPath){
         ij.ImageJ imageJ = new ij.ImageJ();
-        String outputPath = createOutputPath(inputPath);
+        // String outputPath = createOutputPath(inputPath);
 
         try {
             ImagePlus image = IJ.openImage(getAbsolutePath(inputPath));
