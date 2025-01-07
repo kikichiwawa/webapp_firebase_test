@@ -17,14 +17,14 @@ public class ImageProcessingService {
         return absolutePath;
     }
 
-    private String createOutputPath(String inputPath){
-        // 最後のピリオド(.)位置を取得し，その前に"_edited"を挿入
-        StringBuilder sb = new StringBuilder();
-        sb.append(inputPath);
-        int index = inputPath.lastIndexOf(".");
-        sb.insert(index, "_edited");
-        return sb.toString();
-    }
+    // private String createOutputPath(String inputPath){
+    //     // 最後のピリオド(.)位置を取得し，その前に"_edited"を挿入
+    //     StringBuilder sb = new StringBuilder();
+    //     sb.append(inputPath);
+    //     int index = inputPath.lastIndexOf(".");
+    //     sb.insert(index, "_edited");
+    //     return sb.toString();
+    // }
 
     public String convertColorToGrey(String inputPath, String outputPath){
         ij.ImageJ imageJ = new ij.ImageJ();
