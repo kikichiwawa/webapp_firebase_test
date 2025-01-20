@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 public class Image{
-    private String fileName;
+    private String filePath;
     private String text;
     private Timestamp timestamp;
-    private String greyFileName;
+    private String greyFilePath;
 }

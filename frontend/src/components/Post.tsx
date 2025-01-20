@@ -2,7 +2,8 @@ import React, { ChangeEvent, useState } from "react";
 import { validateImage } from "image-validator";
 import { ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../lib/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, DocumentReference, updateDoc } from "firebase/firestore";
+import Image from "../types/image";
 
 
 const Post: React.FC = () => {
@@ -58,23 +59,39 @@ const Post: React.FC = () => {
                 return;
             }
 
-            // 現在時刻，ファイル名からアップロード先のパスの作成(?)
-            const timestamp = new Date().getTime();
-            const uniqueFilename = `${timestamp}_${file.name}`;
-            const storageRef = ref(storage, `images/${uniqueFilename}`);
+            // firestoreにダミーデータをアップロードし，ユニークな識別番号を生成
+            const dummyData: Image = {
+                filePath: "dymmy",
+                text: "dymmy",
+                timestamp: new Date(),
+                greyFilePath: "dymmy"
+            };
+            const docRef: DocumentReference = await addDoc(collection(db, "Images"), dummyData);
+            const docId = docRef.id;
 
+            //　storageへの保存パスを作成
+            const extension = file.name.split(".").pop();
+            const filePath: string = `images/${docId}/${docId}.${extension}`;
+
+            const timestamp = new Date().getTime();
+
+            const image:Image = {
+                filePath: filePath,
+                text: text,
+                timestamp: timestamp,
+                greyFilePath: null,
+            }
+            
             // storageにアップロード
+            const storageRef = ref(storage, filePath);
             await uploadBytes(storageRef, file);
 
             // firestoreに保存
-            await addDoc(collection(db, "Images"), {
-                text,
-                fileName: uniqueFilename,
-                timestamp: new Date(),
-            });
+            await updateDoc(docRef, image);
 
             setErrorMsg("Submission completed!");
         } catch(e){
+        
             setErrorMsg(`Error: ${e}`);
         }
     };
@@ -93,12 +110,12 @@ const Post: React.FC = () => {
                     }}
                 />
                 <br />
-                <a 
+                <button 
                     style={{cursor: "pointer", border: "1px solid gray"}}
                     onClick={uploadImage}
                 >
                     upload
-                </a>
+                </button>
             </form>
             <p style={{color:"red"}}>{errorMsg && errorMsg}</p>
             {imagePreview && (

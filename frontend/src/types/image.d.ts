@@ -1,9 +1,8 @@
-interface Image{
-    id: string;
-    fileName: string;
-    text: number;
+type Image = {
+    filePath: string;
+    text: string;
     timestamp: Data;
-    greyFileName: string;
+    greyFilePath: string|null;
 }
 
 export default Image;
