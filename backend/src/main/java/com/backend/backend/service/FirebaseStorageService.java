@@ -43,8 +43,16 @@ public class FirebaseStorageService {
             throw new IOException("Local file not found: " + localPath);
         }
 
+        //MIMEタイプを取得
+        String contentType = Files.probeContentType(file.toPath()); 
+        if(contentType == null){
+            contentType = "application/octet-stream";
+        }
+
         BlobId blobId = BlobId.of(bucketName, storagePath);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+            .setContentType(contentType)
+            .build();
 
         byte[] fileContent = Files.readAllBytes(file.toPath());
         storage.create(blobInfo, fileContent);

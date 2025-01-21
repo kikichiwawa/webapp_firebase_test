@@ -17,9 +17,9 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
             }
         };
         
-        const imageRef = ref(storage, `images/${image.fileName}`);
+        const imageRef = ref(storage, `${image.filePath}`);
         getImageUrl(imageRef);
-    }, [image.fileName]);
+    }, [image.filePath]);
 
 
     return(
