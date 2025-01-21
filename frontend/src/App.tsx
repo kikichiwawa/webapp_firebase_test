@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const {allImages, imagesError, fetchImages} = useImages();
   return (
     <div className="App">
-      <Post/>
+      <Post fetchImages={fetchImages}/>
       <h3>投稿一覧</h3>
       <p style={{color: "red"}}>{imagesError && imagesError}</p>
       <div className='container'>

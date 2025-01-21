@@ -6,7 +6,7 @@ import { addDoc, collection, DocumentReference, Timestamp, updateDoc } from "fir
 import Image from "../types/image";
 
 
-const Post: React.FC = () => {
+const Post: React.FC<{fetchImages: () => Promise<void>}> = ({fetchImages}) => {
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState<string>("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -54,12 +54,10 @@ const Post: React.FC = () => {
     // 画像をStorageにアップロードし，firestoreに保存する
     const uploadImage = async () => {
         try{
-            console.log(1)
             if(!file) {
                 setErrorMsg("File not seleted.");
                 return;
             }
-            console.log(2)
             // firestoreにダミーデータをアップロードし，ユニークな識別番号を生成
             const dummyData: Image = {
                 filePath: "dymmy",
@@ -67,12 +65,8 @@ const Post: React.FC = () => {
                 timestamp: Timestamp.fromDate(new Date()),
                 greyFilePath: "dymmy"
             };
-            console.log(3)
-            console.log(dummyData)
             const docRef: DocumentReference = await addDoc(collection(db, "Images"), dummyData);
             const docId = docRef.id;
-            console.log(4)
-            console.log(docRef)
 
             //　storageへの保存パスを作成
             const extension = file.name.split(".").pop();
@@ -86,22 +80,17 @@ const Post: React.FC = () => {
                 timestamp: timestamp,
                 greyFilePath: null,
             }
-            console.log(5)
-            console.log(image)
             // storageにアップロード
             const storageRef = ref(storage, filePath);
-            console.log(6)
-            console.log(storageRef)
             await uploadBytes(storageRef, file);
-            console.log(7)
             // firestoreに保存
             await updateDoc(docRef, image);
-            console.log(8)
             setErrorMsg("Submission completed!");
         } catch(e){
-            console.log(e)
             setErrorMsg(`Error: ${e}`);
         }
+        fetchImages();
+        setImagePreview(null);
     };
 
     return(
