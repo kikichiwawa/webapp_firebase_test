@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from "react";
 import { validateImage } from "image-validator";
 import { ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../lib/firebase";
-import { addDoc, collection, DocumentReference, updateDoc } from "firebase/firestore";
+import { addDoc, collection, DocumentReference, Timestamp, updateDoc } from "firebase/firestore";
 import Image from "../types/image";
 
 
@@ -54,26 +54,31 @@ const Post: React.FC = () => {
     // 画像をStorageにアップロードし，firestoreに保存する
     const uploadImage = async () => {
         try{
+            console.log(1)
             if(!file) {
                 setErrorMsg("File not seleted.");
                 return;
             }
-
+            console.log(2)
             // firestoreにダミーデータをアップロードし，ユニークな識別番号を生成
             const dummyData: Image = {
                 filePath: "dymmy",
                 text: "dymmy",
-                timestamp: new Date(),
+                timestamp: Timestamp.fromDate(new Date()),
                 greyFilePath: "dymmy"
             };
+            console.log(3)
+            console.log(dummyData)
             const docRef: DocumentReference = await addDoc(collection(db, "Images"), dummyData);
             const docId = docRef.id;
+            console.log(4)
+            console.log(docRef)
 
             //　storageへの保存パスを作成
             const extension = file.name.split(".").pop();
             const filePath: string = `images/${docId}/${docId}.${extension}`;
 
-            const timestamp = new Date().getTime();
+            const timestamp = Timestamp.fromDate(new Date());
 
             const image:Image = {
                 filePath: filePath,
@@ -81,17 +86,20 @@ const Post: React.FC = () => {
                 timestamp: timestamp,
                 greyFilePath: null,
             }
-            
+            console.log(5)
+            console.log(image)
             // storageにアップロード
             const storageRef = ref(storage, filePath);
+            console.log(6)
+            console.log(storageRef)
             await uploadBytes(storageRef, file);
-
+            console.log(7)
             // firestoreに保存
             await updateDoc(docRef, image);
-
+            console.log(8)
             setErrorMsg("Submission completed!");
         } catch(e){
-        
+            console.log(e)
             setErrorMsg(`Error: ${e}`);
         }
     };
@@ -112,7 +120,10 @@ const Post: React.FC = () => {
                 <br />
                 <button 
                     style={{cursor: "pointer", border: "1px solid gray"}}
-                    onClick={uploadImage}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        uploadImage();
+                    }}
                 >
                     upload
                 </button>
