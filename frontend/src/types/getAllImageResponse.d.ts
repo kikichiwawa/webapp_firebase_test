@@ -1,7 +1,8 @@
+import FirebaseEntity from "./firebaseEntity";
 import Image from "./image";
 
 interface GetAllImageResponse{
-    allImage : Image[],
+    allImageEntity : FirebaseEntity<Image>[],
 }
 
 export default GetAllImageResponse;
