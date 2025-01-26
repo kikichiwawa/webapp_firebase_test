@@ -55,6 +55,10 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
         alert(`${image.text}を削除しようとします(未実装)`);
     }
 
+    const handleConvert = async() => {
+        alert(`${image.text}白黒変換をしようとします(未実装)`);
+    }
+
     const formatTimestamp = (timestamp: Timestamp) => {
         try{
             return timestamp.toDate().toLocaleString();
@@ -71,7 +75,7 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
                 padding: 10,
                 margin: 10,
                 width: 350,
-                height: 400,
+                height: 500,
                 borderRadius: 8,
                 backgroundColor: "#fff",
                 display: "flex",
@@ -120,13 +124,20 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
                     Download Image
                 </button>
 
-                {greyPrevUrl && (
+                {greyPrevUrl ? (
                     <button
                         onClick={() => handleDownload(greyPrevUrl, "grey_image.jpg")}
                         style={buttonStyle}
                     >
                         Download Grey Image
                     </button>
+                ): (
+                    <button
+                    onClick={() => handleConvert()}
+                    style={convertButtonStyle}
+                >
+                    Convert to Grey Image
+                </button>
                 )}
 
                 <button onClick={handleDelete} style={deleteButtonStyle}>
@@ -141,6 +152,17 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
 const buttonStyle: React.CSSProperties = {
     padding: "10px 15px",
     backgroundColor: "#007BFF",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "1rem",
+    transition: "all 0.3s ease",
+};
+
+const convertButtonStyle: React.CSSProperties = {
+    padding: "10px 15px",
+    backgroundColor: "#28a745",
     color: "#fff",
     border: "none",
     borderRadius: "5px",
