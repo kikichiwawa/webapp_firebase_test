@@ -6,6 +6,7 @@ import { Timestamp } from "firebase/firestore";
 
 const useImages = () => {
     const [allImages, setAllImages] = useState<Image[]>([]);
+    const [allId, setAllId] = useState<string[]>([]);
     const [imagesError, setErrorMsg] = useState<string | null>(null);
     
     const fetchImages = async()=>{
@@ -29,9 +30,12 @@ const useImages = () => {
                 console.log(image.timestamp);
                 console.log(typeof image.timestamp);
                 console.log(image.timestamp instanceof Timestamp)
-            })
+            });
             // const sortData = [...result.allImages].sort((a,b)=>a.timestamp-b.timestamp);
             setAllImages(allImageData);
+
+            const allIdData: string[] = data.allImageEntity.map((fbEntity: FirebaseEntity<Image>) => fbEntity.id);
+            setAllId(allIdData);
         }catch(error){
             const errorMessage = error instanceof Error ? error.message : String(error);
             setErrorMsg(`Error: ${errorMessage}`);
@@ -42,7 +46,7 @@ const useImages = () => {
         fetchImages();
     },[]);
 
-    return {allImages, imagesError, fetchImages};
+    return {allImages, allId, imagesError, fetchImages};
 }
 
 export default useImages;

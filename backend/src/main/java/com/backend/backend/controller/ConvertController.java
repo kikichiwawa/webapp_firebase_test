@@ -60,7 +60,7 @@ public class ConvertController {
                 // System.out.println("カラーファイルの取得");
                 firebaseStorageService.getFile(colorLocalPath, colorStoragePath);
                 // System.out.println("グレーへの変換");
-                imageProcessingService.convertColorToGrey(colorLocalPath, grayLocalPath);
+                imageProcessingService.convertColorToGray(colorLocalPath, grayLocalPath);
                 // System.out.println("グレーファイルのアップロード");
                 firebaseStorageService.postFile(grayLocalPath, grayStoragePath);
                 

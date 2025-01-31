@@ -26,7 +26,7 @@ public class ImageProcessingService {
     //     return sb.toString();
     // }
 
-    public String convertColorToGrey(String inputPath, String outputPath){
+    public String convertColorToGray(String inputPath, String outputPath){
         ij.ImageJ imageJ = new ij.ImageJ();
         // String outputPath = createOutputPath(inputPath);
 

@@ -65,7 +65,7 @@ public class FirestoreService {
 
             Map<String, Object> map = docRef.get().get().getData();
             
-            System.out.println(map);
+            // System.out.println(map);
             String id = docRef.getId();
             return convertMapToImage(map, id);
         } catch (Exception e) {
