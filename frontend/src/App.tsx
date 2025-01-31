@@ -20,7 +20,7 @@ const App: React.FC = () => {
     });
     return () => unsubscribe();
   });
-  const {allImages, imagesError, fetchImages} = useImages();
+  const {allImages, imagesError, allId, fetchImages} = useImages();
   return (
     <div className="App">
       <Header />
@@ -34,7 +34,7 @@ const App: React.FC = () => {
             <div className='row'>
               {allImages.map((image, index) => (
                 <div className='col-4' key={index}>
-                  <PreviewImage image={image}/>
+                  <PreviewImage id={allId[index]} image={image} fetchImages={fetchImages}/>
                 </div>
               ))}
               

@@ -4,11 +4,10 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../lib/firebase";
 import { Timestamp } from "firebase/firestore";
 
-const PreviewImage: React.FC<{image: Image}> = ({image}) => {
+const PreviewImage: React.FC<{id: string, image: Image, fetchImages: () => Promise<void>}> = ({id, image, fetchImages}) => {
     const [prevUrl, setPrevUrl] = useState<string>("");
     const [error, setError] = useState<string>("");
-    const [greyPrevUrl, setGreyPrevUrl] = useState<string| null>(null);
-
+    const [grayPrevUrl, setGrayPrevUrl] = useState<string| null>(null);
 
 
     useEffect(() => {    
@@ -25,11 +24,11 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
 
         const getGrayImageUrl = async () => {
             try{
-                const imageRef = ref(storage, `${image.greyFilePath}`);
+                const imageRef = ref(storage, `${image.grayFilePath}`);
                 const url = await getDownloadURL(imageRef);
-                setGreyPrevUrl(url);
+                setGrayPrevUrl(url);
             }catch(e) {
-                setGreyPrevUrl(null);
+                setGrayPrevUrl(null);
             }
         }
         
@@ -39,7 +38,7 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
         
         getGrayImageUrl();
 
-    }, [image.filePath, image.greyFilePath]);
+    }, [image.filePath, image.grayFilePath]);
 
     const handleDownload = async(url: string, fileName: string) => {
         // lobalhost:3000で構築している限り，ドメインが違うため別ウィンドウで開かれる可能性があり
@@ -52,11 +51,21 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
     }
 
     const handleDelete = async() => {
-        alert(`${image.text}を削除しようとします(未実装)`);
+        const response = await fetch(`http://localhost:8080/fb/${id}`, {method: 'DELETE'});
+        if(!response.ok){
+            throw new Error("Failed to fetch images");
+        }
+        fetchImages();
     }
 
     const handleConvert = async() => {
-        alert(`${image.text}白黒変換をしようとします(未実装)`);
+        const response = await fetch(`http://localhost:8080/convert/gray/${id}`, {method: "PUT"});
+        if(!response.ok){
+            
+            console.log(response);
+            throw new Error("Failed to fetch images");
+        }
+        fetchImages();
     }
 
     const formatTimestamp = (timestamp: Timestamp) => {
@@ -124,19 +133,19 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
                     Download Image
                 </button>
 
-                {greyPrevUrl ? (
+                {grayPrevUrl ? (
                     <button
-                        onClick={() => handleDownload(greyPrevUrl, "grey_image.jpg")}
+                        onClick={() => handleDownload(grayPrevUrl, "gray_image.jpg")}
                         style={buttonStyle}
                     >
-                        Download Grey Image
+                        Download Gray Image
                     </button>
                 ): (
                     <button
                     onClick={() => handleConvert()}
                     style={convertButtonStyle}
                 >
-                    Convert to Grey Image
+                    Convert to Gray Image
                 </button>
                 )}
 

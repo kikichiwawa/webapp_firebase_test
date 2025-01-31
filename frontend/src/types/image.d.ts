@@ -4,7 +4,7 @@ type Image = {
     filePath: string;
     text: string;
     timestamp: Timestamp;
-    greyFilePath: string|null;
+    grayFilePath: string|null;
 }
 
 export default Image;

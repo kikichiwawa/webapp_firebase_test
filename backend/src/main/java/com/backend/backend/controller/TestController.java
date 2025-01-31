@@ -34,7 +34,7 @@ public class TestController {
 
         String inputPath = Paths.get(tempImagePath, inputFileNema).toString();
         String outputPath = Paths.get(tempImagePath, outputFileNema).toString();
-        imageProcessingService.convertColorToGrey(inputPath, outputPath);
+        imageProcessingService.convertColorToGray(inputPath, outputPath);
     }
 
     @GetMapping("get")
