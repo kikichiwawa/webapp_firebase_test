@@ -7,7 +7,7 @@ import { Timestamp } from "firebase/firestore";
 const PreviewImage: React.FC<{image: Image}> = ({image}) => {
     const [prevUrl, setPrevUrl] = useState<string>("");
     const [error, setError] = useState<string>("");
-    const [greyPrevUrl, setGreyPrevUrl] = useState<string| null>(null);
+    const [grayPrevUrl, setGrayPrevUrl] = useState<string| null>(null);
 
 
 
@@ -25,11 +25,11 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
 
         const getGrayImageUrl = async () => {
             try{
-                const imageRef = ref(storage, `${image.greyFilePath}`);
+                const imageRef = ref(storage, `${image.grayFilePath}`);
                 const url = await getDownloadURL(imageRef);
-                setGreyPrevUrl(url);
+                setGrayPrevUrl(url);
             }catch(e) {
-                setGreyPrevUrl(null);
+                setGrayPrevUrl(null);
             }
         }
         
@@ -39,7 +39,7 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
         
         getGrayImageUrl();
 
-    }, [image.filePath, image.greyFilePath]);
+    }, [image.filePath, image.grayFilePath]);
 
     const handleDownload = async(url: string, fileName: string) => {
         // lobalhost:3000で構築している限り，ドメインが違うため別ウィンドウで開かれる可能性があり
@@ -124,9 +124,9 @@ const PreviewImage: React.FC<{image: Image}> = ({image}) => {
                     Download Image
                 </button>
 
-                {greyPrevUrl ? (
+                {grayPrevUrl ? (
                     <button
-                        onClick={() => handleDownload(greyPrevUrl, "grey_image.jpg")}
+                        onClick={() => handleDownload(grayPrevUrl, "gray_image.jpg")}
                         style={buttonStyle}
                     >
                         Download Grey Image

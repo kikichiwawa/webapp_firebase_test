@@ -10,5 +10,5 @@ public class Image{
     private String filePath;
     private String text;
     private Timestamp timestamp;
-    private String greyFilePath;
+    private String grayFilePath;
 }

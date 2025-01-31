@@ -63,7 +63,7 @@ const Post: React.FC<{fetchImages: () => Promise<void>}> = ({fetchImages}) => {
                 filePath: "dymmy",
                 text: "dymmy",
                 timestamp: Timestamp.fromDate(new Date()),
-                greyFilePath: "dymmy"
+                grayFilePath: "dymmy"
             };
             const docRef: DocumentReference = await addDoc(collection(db, "Images"), dummyData);
             const docId = docRef.id;
@@ -78,7 +78,7 @@ const Post: React.FC<{fetchImages: () => Promise<void>}> = ({fetchImages}) => {
                 filePath: filePath,
                 text: text,
                 timestamp: timestamp,
-                greyFilePath: null,
+                grayFilePath: null,
             }
             // storageにアップロード
             const storageRef = ref(storage, filePath);
